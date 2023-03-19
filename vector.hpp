@@ -16,6 +16,8 @@ class Vector {
 
 	vector<K> _vect;
 
+	Vector<K>(){};
+
 	Vector<K>(vector<K> other){
 		_vect = other;
 	}
@@ -30,22 +32,72 @@ class Vector {
 		return _vect.size();
 	}
 
-	friend ostream& operator<<(ostream& out, const Vector& vect)
-	{
+	friend ostream& operator<<(ostream& out, const Vector& vect){
 		for (auto i : vect._vect)
 			out << " " << i ;
 		return out;
 	}
 
 	operator Matrix<K>() {
-
-		
-
-
-
-		Matrix<K> coucou({{1, 2, 3, 4}, {5, 6, 7, 8}});
+		Matrix<K> coucou({this->_vect});
 		return coucou;
 	}
 
+	Vector<K>& operator +=(Vector<K> &rhs){
+		if (_vect.size() != rhs._vect.size())
+			throw std::invalid_argument( "adding two vectors of different size" );
+		for (unsigned int i = 0; i < rhs._vect.size(); ++i)
+		{
+			_vect[i] += rhs._vect[i];
+		}		
+		return *this;
+	}
+
+	Vector<K>& operator -=(Vector<K> &rhs){
+		if (_vect.size() != rhs._vect.size())
+			throw std::invalid_argument( "substracting two vectors of different size" );
+		for (unsigned int i = 0; i < rhs._vect.size(); ++i)
+		{
+			_vect[i] -= rhs._vect[i];
+		}
+		return *this;
+	}
+
+	Vector<K>& operator *=(K scalar){
+		for (unsigned int i = 0; i < rhs._vect.size(); ++i)
+		{
+			_vect[i] *= scalar;
+		}
+		return *this;
+	}
 };
 
+template <typename K>
+Vector<K> operator+(Vector<K> &lhs, Vector<K> &rhs){
+	if (lhs._vect.size() != rhs._vect.size())
+		throw std::invalid_argument( "adding two vectors of different size" );
+	Vector<K> res;
+	size_t count = lhs._vect.size();
+	for (size_t i = 0; i < count; ++i)
+		res._vect.push_back(lhs._vect[i] + rhs._vect[i]);
+	return res;
+}
+template <typename K>
+Vector<K> operator-(Vector<K> &lhs, Vector<K> &rhs){
+	if (lhs._vect.size() != rhs._vect.size())
+		throw std::invalid_argument( "substracting two vectors of different size" );
+	Vector<K> res;
+	size_t count = lhs._vect.size();
+	for (size_t i = 0; i < count; ++i)
+		res._vect.push_back(lhs._vect[i] - rhs._vect[i]);
+	return res;
+}
+template <typename K>
+Vector<K> operator*(Vector<K> &lhs, K scalar){
+	Vector<K> res;
+	for (auto i : lhs._vect)
+	{
+		res._vect.push_back(i * scalar);
+	}
+	return res;
+}

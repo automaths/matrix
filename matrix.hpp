@@ -10,6 +10,9 @@
 using namespace std;
 
 template <typename K>
+class Vector;
+
+template <typename K>
 class Matrix {
 
 	public:
@@ -70,4 +73,14 @@ class Matrix {
 		return out;
 	}
 
+	operator Vector<K>() {
+		if (this->_rows > 1)
+			throw std::invalid_argument( "can't convert matrix with more than one row" );
+		Vector<K> coucou(this->_matrix);
+		return coucou;
+	}
+
+
+
 };
+
